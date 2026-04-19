@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg0: #0D0F12;
+  --bg1: #16181D;
+  --bg2: #1C1F26;
+  --bg3: #21252D;
+  --bg4: #282D36;
+  --fg0: #EDEDED;
+  --fg1: #CFCFCF;
+  --fg2: #A1A1A1;
+  --fg3: #6B6B70;
+  
+  --orange: #FF7A1A;
+  --orange-dim: rgba(255,122,26,0.15);
+  
+  --blue: #3b82f6; /* Keeping for any stray usage, though not primary */
+  --blue-dim: rgba(59,130,246,0.12);
+  
+  --green: #4ADE80;
+  --green-dim: rgba(74,222,128,0.15);
+  
+  --red: #FF6B6B;
+  --red-dim: rgba(255,107,107,0.15);
+  
+  --amber: #f59e0b;
+  
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+}
+
+body {
+  color: var(--fg0);
+  background: var(--bg0);
+  font-family: var(--font-dm-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; }
+}
+
+/* Hide scrollbar for clean UI where horizontal overflow exists */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
