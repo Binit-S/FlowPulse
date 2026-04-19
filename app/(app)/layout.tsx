@@ -1,5 +1,6 @@
 import { MatchTimeline } from "@/components/event/MatchTimeline";
 import { BottomNav } from "@/components/ui/BottomNav";
+import { ConciergeWidget } from "@/components/concierge/ConciergeWidget";
 
 export default function AppLayout({
   children,
@@ -14,6 +15,7 @@ export default function AppLayout({
         {children}
       </main>
 
+      <ConciergeWidget />
       <BottomNav />
     </div>
   );

@@ -68,7 +68,7 @@ export function VenueMap() {
           {WANKHEDE_CONFIG.zones.map(z => (
             <DensityOverlay 
               key={`overlay-${z.id}`}
-              zone={z}
+              zone={{ id: z.id, svgShape: z.svgShape ? { ...z.svgShape, type: 'ellipse' as const } : undefined }}
               level={densities[z.id] || "low"}
             />
           ))}

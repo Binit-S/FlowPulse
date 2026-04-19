@@ -143,3 +143,46 @@ Return ONLY a JSON object:
     return null;
   }
 }
+
+/**
+ * Natural language concierge tailored for stadium events.
+ * 
+ * @param query - The user's NLP text query.
+ * @param location - Context about where the user currently is or going.
+ * @param liveData - Aggregated live wait time/density metrics.
+ * @returns Concierge textual response
+ */
+export async function askConcierge(
+  query: string,
+  location: string,
+  liveData: Record<string, string | number>
+): Promise<string> {
+  if (!ai) {
+    logger.warn("Gemini API key not configured, returning mock response");
+    return "I'm currently offline, but the North gate is historically fastest during this phase.";
+  }
+
+  const prompt = `You are "FlowPulse Concierge", an expert nav-assistant for this stadium.
+The user is at/heading to: ${location}.
+Live constraints/wait times/densities right now: ${JSON.stringify(liveData)}.
+
+The user asks: "${query}"
+
+Provide a concise, helpful, and natural 1-3 sentence response. Factor in their location and the live wait times. Do NOT invent wait times that aren't in the constraints.`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        maxOutputTokens: 150,
+        temperature: 0.7,
+      },
+    });
+
+    return response.text || "I'm not sure about that right now, please try asking again.";
+  } catch (error) {
+    logger.error("Gemini concierge failed", error);
+    return "Sorry, I'm having trouble connecting to the network right now.";
+  }
+}
