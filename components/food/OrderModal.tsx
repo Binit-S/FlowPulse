@@ -27,14 +27,15 @@ export function OrderModal({ stall, onClose }: OrderModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center bg-bg0/80 backdrop-blur-md p-safe">
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center bg-bg0/80 backdrop-blur-md p-safe"
+         role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div className="bg-bg1 w-full max-w-md rounded-t-[32px] sm:rounded-[32px] border-none overflow-hidden animate-fade-slide-up flex flex-col max-h-[85vh]">
         
         {/* Header */}
         <div className="p-6 relative flex shrink-0 items-center">
           <div className="text-4xl mr-4" aria-hidden="true">{stall.emoji}</div>
           <div>
-            <h3 className="font-heading font-bold text-[20px] tracking-tight">{stall.name}</h3>
+            <h3 id="modal-title" className="font-heading font-bold text-[20px] tracking-tight">{stall.name}</h3>
             <p className="text-[14px] text-orange font-body font-bold mt-1">Wait: ~{stall.waitMinutes} m</p>
           </div>
           <button 
@@ -56,7 +57,7 @@ export function OrderModal({ stall, onClose }: OrderModalProps) {
               <h4 className="font-heading font-bold text-xl mb-2">Order Confirmed!</h4>
               <p className="text-[15px] text-fg2 font-body text-center leading-relaxed">
                 Estimated pickup in {stall.waitMinutes} mins.<br/>
-                We'll notify you when it's ready.
+                We&apos;ll notify you when it&apos;s ready.
               </p>
             </div>
           ) : (

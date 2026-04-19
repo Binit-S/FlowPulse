@@ -1,24 +1,34 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
+import { useEffect, PropsWithChildren } from "react";
 import { onValue, ref } from "firebase/database";
 import { db } from "@/lib/firebase";
 import { useAppStore } from "@/lib/store";
-import { DensityLevel } from "@/types";
+import { DensityLevel, GateReport } from "@/types";
 import { WANKHEDE_CONFIG } from "@/lib/venue-configs/wankhede";
 import { computeZoneDensity } from "@/lib/density-engine";
+import { logger } from "@/lib/logger";
 
-export function FirebaseProvider({ children }: { children: ReactNode }) {
+/** Firebase zone data shape from the Realtime Database */
+interface ZoneSnapshot {
+  reports?: Record<string, GateReport>;
+  computedLevel?: DensityLevel;
+}
+
+/**
+ * Subscribes to Firebase Realtime Database for live density updates.
+ * Falls back to mock density data if Firebase is not configured.
+ */
+export function FirebaseProvider({ children }: PropsWithChildren) {
   const { setAllDensities } = useAppStore();
 
   useEffect(() => {
     if (!db) {
-      // Fallback if no firebase config - just put mock base density
       const mockDensities: Record<string, DensityLevel> = {
-        "S1": "high",
-        "S2": "medium",
-        "S3": "low",
-        "S4": "medium",
+        S1: "high",
+        S2: "medium",
+        S3: "low",
+        S4: "medium",
         "gate-A": "high",
         "gate-B": "medium",
         "gate-C": "low",
@@ -29,28 +39,31 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     }
 
     const densityRef = ref(db, `density/${WANKHEDE_CONFIG.id}`);
-    
-    const unsubscribe = onValue(densityRef, (snapshot) => {
-      const data = snapshot.val();
-      if (!data) return;
 
-      const newDensities: Record<string, DensityLevel> = {};
+    const unsubscribe = onValue(
+      densityRef,
+      (snapshot) => {
+        const data = snapshot.val() as Record<string, ZoneSnapshot> | null;
+        if (!data) return;
 
-      // Parse reports to densities
-      Object.keys(data).forEach(zoneId => {
-        const zoneData = data[zoneId];
-        if (zoneData.reports) {
-          const reportsArray = Object.values(zoneData.reports) as any[];
-          newDensities[zoneId] = computeZoneDensity(reportsArray, zoneId);
-        } else if (zoneData.computedLevel) {
-          newDensities[zoneId] = zoneData.computedLevel as DensityLevel;
-        }
-      });
+        const newDensities: Record<string, DensityLevel> = {};
 
-      setAllDensities(newDensities);
-    }, (error) => {
-      console.error("Firebase DB error:", error);
-    });
+        Object.keys(data).forEach((zoneId) => {
+          const zoneData = data[zoneId];
+          if (zoneData.reports) {
+            const reportsArray: GateReport[] = Object.values(zoneData.reports);
+            newDensities[zoneId] = computeZoneDensity(reportsArray, zoneId);
+          } else if (zoneData.computedLevel) {
+            newDensities[zoneId] = zoneData.computedLevel;
+          }
+        });
+
+        setAllDensities(newDensities);
+      },
+      (error) => {
+        logger.error("Firebase DB subscription error", error);
+      }
+    );
 
     return () => unsubscribe();
   }, [setAllDensities]);

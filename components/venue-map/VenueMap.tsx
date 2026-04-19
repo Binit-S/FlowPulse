@@ -4,7 +4,6 @@ import { WANKHEDE_CONFIG } from "@/lib/venue-configs/wankhede";
 import { useAppStore } from "@/lib/store";
 import { DensityOverlay } from "./DensityOverlay";
 import { RouteOverlay } from "./RouteOverlay";
-import { DensityLevel } from "@/types";
 
 export function VenueMap() {
   const { densities, selectedGate } = useAppStore();
@@ -76,7 +75,7 @@ export function VenueMap() {
           {WANKHEDE_CONFIG.gates.map(g => (
             <DensityOverlay 
               key={`overlay-gate-${g.id}`}
-              zone={{ ...g, id: `gate-${g.id}`, type: 'gate', svgShape: { type: 'ellipse', cx: g.position.cx, cy: g.position.cy, rx: 20, ry: 20 } } as any}
+              zone={{ id: `gate-${g.id}`, svgShape: { type: 'ellipse' as const, cx: g.position.cx, cy: g.position.cy, rx: 20, ry: 20 } }}
               level={densities[`gate-${g.id}`] || "low"}
             />
           ))}

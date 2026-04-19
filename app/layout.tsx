@@ -28,8 +28,6 @@ export const viewport: Viewport = {
   themeColor: "#FF7A1A",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({
@@ -40,8 +38,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dmSans.variable} antialiased font-body bg-bg0 text-fg0 min-h-[100dvh]`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:bg-orange focus:text-bg0 focus:px-4 focus:py-2 focus:rounded-pill focus:font-bold"
+        >
+          Skip to main content
+        </a>
         <Providers>
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

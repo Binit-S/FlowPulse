@@ -1,0 +1,46 @@
+{
+  "rules": {
+    "density": {
+      ".read": true,
+      "$venueId": {
+        // Anyone can read density data for a venue
+        ".read": true,
+        // Only authenticated users can write density reports
+        ".write": "auth != null",
+        "gate-A": {
+          "reports": {
+            "$reportId": {
+              // Users can only write their own reports
+              ".write": "auth != null",
+              ".validate": "newData.hasChildren(['userId', 'density', 'timestamp']) && newData.child('density').val().matches(/^(low|medium|high)$/)"
+            }
+          }
+        },
+        "gate-B": {
+          "reports": {
+            "$reportId": {
+              ".write": "auth != null",
+              ".validate": "newData.hasChildren(['userId', 'density', 'timestamp']) && newData.child('density').val().matches(/^(low|medium|high)$/)"
+            }
+          }
+        },
+        "gate-C": {
+          "reports": {
+            "$reportId": {
+              ".write": "auth != null",
+              ".validate": "newData.hasChildren(['userId', 'density', 'timestamp']) && newData.child('density').val().matches(/^(low|medium|high)$/)"
+            }
+          }
+        },
+        "gate-D": {
+          "reports": {
+            "$reportId": {
+              ".write": "auth != null",
+              ".validate": "newData.hasChildren(['userId', 'density', 'timestamp']) && newData.child('density').val().matches(/^(low|medium|high)$/)"
+            }
+          }
+        }
+      }
+    }
+  }
+}

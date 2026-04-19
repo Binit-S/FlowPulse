@@ -21,7 +21,11 @@ export function DensityBadge({ level, className = "", showText = true }: Density
   };
 
   return (
-    <div className={`inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-mono font-medium ${getStyles()} ${className}`}>
+    <div 
+      className={`inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-mono font-medium ${getStyles()} ${className}`}
+      aria-label={`Density: ${level}`}
+      title={`Density: ${level}`}
+    >
       {showText && <span className="capitalize">{level}</span>}
     </div>
   );

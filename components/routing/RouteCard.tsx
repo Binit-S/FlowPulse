@@ -4,9 +4,9 @@ import { useAppStore } from "@/lib/store";
 import { MOCK_TICKET } from "@/lib/mock-data";
 import { rankGates } from "@/lib/route-scorer";
 import { ChevronRight } from "lucide-react";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
-export function RouteCard() {
+export const RouteCard = memo(function RouteCard() {
   const { densities, selectedGate } = useAppStore();
   const targetStand = MOCK_TICKET.stand;
 
@@ -20,7 +20,7 @@ export function RouteCard() {
   if (!activeRoute) return null;
 
   return (
-    <div className="bg-bg2 rounded-[var(--r-lg)] p-6 flex flex-col mt-4">
+    <div className="bg-bg2 rounded-[var(--r-lg)] p-6 flex flex-col mt-4" aria-live="polite" aria-atomic="true">
       <div className="flex items-center space-x-2 text-[15px] overflow-x-auto scrollbar-hide pb-3">
         {activeRoute.steps.map((step, idx) => (
           <div key={idx} className="flex items-center shrink-0">
@@ -46,4 +46,4 @@ export function RouteCard() {
       )}
     </div>
   );
-}
+});

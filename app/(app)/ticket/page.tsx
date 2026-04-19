@@ -10,7 +10,7 @@ import { rankGates } from "@/lib/route-scorer";
 import { useMemo } from "react";
 
 export default function TicketPage() {
-  const { densities, selectedGate, setSelectedGate } = useAppStore();
+  const { densities, selectedGate } = useAppStore();
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [reportDensity, setReportDensity] = useState<"low"|"medium"|"high">("medium");
   const [isSubmitting, setIsSubmitting] = useState(false);
